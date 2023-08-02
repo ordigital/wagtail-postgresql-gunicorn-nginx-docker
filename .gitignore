@@ -4,4 +4,4 @@ env/.dev.db
 env/.prod
 env/.prod.db
 app/static/*
-env/.prod.db-sample
+

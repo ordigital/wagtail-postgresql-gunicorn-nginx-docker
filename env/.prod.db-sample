@@ -1,0 +1,3 @@
+POSTGRES_DB=wagtail
+POSTGRES_USER=wagtail
+POSTGRES_PASSWORD=<password>
