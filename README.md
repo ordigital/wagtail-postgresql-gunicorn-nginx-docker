@@ -1,4 +1,4 @@
-**Wagtail + PostgreSQL + Gunicorn + Nginx**
+# Wagtail + PostgreSQL + Gunicorn + Nginx
 
 1. Download repository: `git clone git@github.com:ordigital/wagtail-postgresql-gunicorn-nginx-docker.git`
 2. Create `.dev`, `.dev.db`, `.prod` and `.prod.db` config files in `env/` folder (you can rename and edit sample files)
