@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: ./app
+      dockerfile: Dockerfile.prod
+    command: gunicorn app.wsgi:application --bind 0.0.0.0:7999
+    volumes:
+      - ./app:/app
+    env_file:
+      - ./env/.prod
+    depends_on:
+      - db
+  db:
+    restart: always
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./env/.prod.db
+  nginx:
+    restart: always
+    build: ./nginx
+    volumes:
+      - ./app/static:/static
+      - ./app/media:/media
+    ports:
+      - 8000:8000
+    depends_on:
+      - web
+
+volumes:
+  postgres_data:
+

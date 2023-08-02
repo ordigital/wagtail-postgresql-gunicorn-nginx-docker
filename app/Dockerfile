@@ -1,0 +1,45 @@
+# Use an official Python runtime based on Debian 10 "buster" as a parent image.
+FROM python:3.11.4-slim-buster
+
+# Add user that will be used in the container.
+RUN useradd wagtail
+
+# Port used by this container to serve HTTP.
+EXPOSE 8000
+
+# Set environment variables.
+# 1. Force Python stdout and stderr streams to be unbuffered.
+# 2. Set PORT variable that is used by Gunicorn. This should match "EXPOSE"
+#    command.
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+ENV PORT 8000
+
+# Install system packages
+RUN apt-get update --yes --quiet && apt-get install --yes --quiet --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    libmariadbclient-dev \
+    libjpeg62-turbo-dev \
+    zlib1g-dev \
+    libwebp-dev \
+    netcat \
+ && rm -rf /var/lib/apt/lists/*
+
+# Copy files
+COPY ./requirements.txt /requirements.txt
+COPY ./entrypoint.sh /entrypoint.sh
+
+# Requirements
+RUN pip install --upgrade pip
+RUN pip install -r /requirements.txt
+
+WORKDIR /app
+RUN chown -R wagtail:wagtail /app
+RUN chown wagtail:wagtail /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+#COPY --chown=wagtail:wagtail . .
+USER wagtail
+
+# Entrypoint
+ENTRYPOINT ["/entrypoint.sh"]

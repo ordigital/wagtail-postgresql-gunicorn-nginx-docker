@@ -1,0 +1,53 @@
+#!/bin/bash
+
+start_prod() {
+    echo "[II] Starting production containers…"
+    docker-compose -f ./docker-compose.prod.yml up --build
+}
+
+stop_prod() {
+    echo "[II] Stopping production containers…"
+    docker-compose -f ./docker-compose.prod.yml down -v
+}
+
+start_dev() {
+    stop_dev
+    echo "[II] Starting developement containers…"
+    docker-compose up --build
+}
+
+stop_dev() {  
+    echo "[II] Stopping developement containers…"
+    docker-compose down -v 
+}
+
+help() {
+    echo "dev -- stop & build & start developement container"
+	echo "prod -- stop & build & start production container"
+    echo "stop -- stop developement & production containers"
+}
+
+# Start
+case $1 in
+    "help")
+        help
+        ;;
+    "prod") 
+        start_prod 
+        ;;
+    "stopp") 
+        stop_prod 
+        ;;
+    "stopd") 
+        stop_dev 
+        ;;
+    "stop") 
+        stop_dev
+        stop_prod 
+        ;;
+    *) 
+        start_dev
+        ;;
+esac
+
+
